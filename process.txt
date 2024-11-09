@@ -1,0 +1,8 @@
+//pages
+
+hopital registration
+
+diagnostic center registration
+
+user registration
+
