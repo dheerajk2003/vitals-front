@@ -40,6 +40,7 @@ export default function HosCreteReq() {
             Valid: boolean
             Int64: number
         }
+        Id: number
         BloodGroup: string
         Type: number
         Unit: number
@@ -95,6 +96,24 @@ export default function HosCreteReq() {
         }
         else{
             alert("Succesfull request")
+            window.location.reload();
+
+        }
+    }
+
+    async function hosDelReq(e: any, int:number) {
+        const responce = await fetch(`http://localhost/hospital/deleteRequest?id=${int}`,{
+            method: "GET",
+            headers: {
+                "X-TOKEN": `${localStorage.getItem("hospitaltoken")}`
+            }
+        })
+        if(responce.status == 200){
+            alert("Successful");
+            window.location.reload();
+        }
+        else{
+            alert("Failed");
         }
     }
 
@@ -136,7 +155,7 @@ export default function HosCreteReq() {
                 </div>
             </div>
 
-            <div className="mt-12 shadow p-5 rounded-xl bg-white">
+            {/* <div className="mt-12 shadow p-5 rounded-xl bg-white">
                 <h1 className="mb-5 ml-2 font-semibold text-2xl">Blood Requests</h1>
                 <div>
                     <table className="w-full mt-12">
@@ -166,7 +185,7 @@ export default function HosCreteReq() {
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </div> */}
 
             <div className="mt-12 shadow p-5 rounded-xl bg-white">
                 <h1 className="mb-5 ml-2 font-semibold text-2xl">Donation Approval</h1>
@@ -191,7 +210,7 @@ export default function HosCreteReq() {
                                             <td className="p-2">{item.Type > 0 ? 'Emergency' : 'General'}</td>
                                             <td className="p-2">{item.Unit}</td>
                                             <td className="p-2">{
-                                                <button type="submit" className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-1 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Remove</button>   
+                                                <button type="submit" onClick={(e) => hosDelReq(e,item.Id)} className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-1 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Remove</button>   
                                             }</td>
                                         </tr> 
                                         }
@@ -214,7 +233,6 @@ export default function HosCreteReq() {
                                 <th className="text-left">Blood Group</th>
                                 <th className="text-left">Type</th>
                                 <th className="text-left">Quantity</th>
-                                <th className="text-left">Remove</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -225,9 +243,6 @@ export default function HosCreteReq() {
                                         <td className="p-2">{item.BloodGroup}</td>
                                         <td className="p-2">{item.Type > 0 ? 'Emergency' : 'General'}</td>
                                         <td className="p-2">{item.Unit}</td>
-                                        <td className="p-2">{
-                                            <button type="submit" className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-1 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Remove</button>   
-                                        }</td>
                                     </tr> : " "
                                     }
                                     </> 
