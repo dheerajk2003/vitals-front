@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function HospitalLogin(){
@@ -14,8 +14,17 @@ export default function HospitalLogin(){
         setFormData({...formData, [name]: value});
     }
 
-    async function handleSubmit() {
-        
+    async function handleSubmit(e : FormEvent) {
+        e.preventDefault();
+        const responce = await fetch("http://localhost:8080/hospital/login", {
+            method: "POST",
+            body: JSON.stringify({
+                email: formData.email,
+                password: formData.password
+            })
+        })
+        const data = await responce.json();
+        console.log(data);
     }
 
 

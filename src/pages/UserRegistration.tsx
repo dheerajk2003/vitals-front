@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function UserRegistration() {
@@ -13,7 +13,7 @@ export default function UserRegistration() {
 
     const [bloodGroup, setbloodGroup] = useState("");
 
-    const [voter, setVoter] = useState<string>();
+    const [voter, setVoter] = useState<File | null>();
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         const { name, value } = e.target;
@@ -22,24 +22,30 @@ export default function UserRegistration() {
 
     function handleFile(e: React.ChangeEvent<HTMLInputElement>){
         if(e.target.files && e.target.files[0]){
-            setVoter(URL.createObjectURL(e.target.files[0]));
+            setVoter(e.target.files[0]);
         }
     }
 
-    async function handleSubmit(){
-        const request = await fetch("http://localhost:8080/donator/register",{
+    async function handleSubmit(e: FormEvent){
+
+        e.preventDefault();
+
+        // const img = 
+        const form = new FormData();
+        if(voter != null){
+            form.append("name" , formData.name);
+            form.append("email", formData.email)
+            form.append("password", formData.password)
+            form.append("phoneno", formData.phone)
+            form.append("address", formData.address)
+            form.append("blood_group", bloodGroup)
+            form.append("image", voter)
+        }
+
+        const request = await fetch("http://127.0.0.1:8080/donator/register",{
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                name: formData.name,
-                email: formData.email,
-                password: formData.password,
-                bloodgroup: bloodGroup,
-                address: formData.address,
-                phoneno: formData.phone
-            })
+            body: form,
+            credentials: 'include'        
         });
 
         const data = await request.json();
@@ -105,8 +111,6 @@ export default function UserRegistration() {
                     <label htmlFor="voter" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-500">Your Voter</label>
                     <input placeholder="Voter" onChange={handleFile} type="file" id="voter" name="voter" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" required />
                 </div>
-
-                <img src={voter} alt="" />
 
                 <div className="flex items-start flex-col mb-5">
                     <label htmlFor="terms" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Already registered? <Link to="/userlogin" className="text-red-600 hover:underline dark:text-red-700">Login Now</Link></label>

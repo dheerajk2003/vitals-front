@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function HospitalRegistration() {
@@ -12,23 +12,41 @@ export default function HospitalRegistration() {
         phone: '',
     });
 
-    const [certificate, setCertificate] = useState<string>();
+    const [certificate, setCertificate] = useState<File | null>();
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     }
 
-    function handleFileCert(e: React.ChangeEvent<HTMLInputElement>){
-        if(e.target.files && e.target.files[0]){
-            setCertificate(URL.createObjectURL(e.target.files[0]));
+    function handleFileCert(e: React.ChangeEvent<HTMLInputElement>) {
+        if (e.target.files && e.target.files[0]) {
+            setCertificate(e.target.files[0]);
         }
     }
 
-    function handleSubmit(){
+    async function handleSubmit(e : FormEvent) {
+        e.preventDefault();
 
+        const form = new FormData();
+        if (certificate != null) {
+            form.append("name", formData.name)
+            form.append("email", formData.email)
+            form.append("password", formData.password)
+            form.append("address", formData.address)
+            form.append("phoneno", formData.phone)
+            form.append("image", certificate)
+        }
+
+        const responce = await fetch("http://localhost:8080/hospital/register",{
+            method: "POST",
+            body: form
+        })
+        console.log(responce);
+        const data = await responce.json();
+        console.log("Data recieved: ", data)
     }
-        return (
+    return (
         <div className="flex justify-center items-center h-screen bg-gray-100">
             <form className="w-2/6 mx-auto bg-white px-32 py-24 shadow-md rounded-lg" onSubmit={handleSubmit}>
                 <h1 className="text-2xl font-bold text-center mb-12">Hospital Registration</h1>
@@ -71,5 +89,5 @@ export default function HospitalRegistration() {
 
         </div>
     )
-    
+
 }

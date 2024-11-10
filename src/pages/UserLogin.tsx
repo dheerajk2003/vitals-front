@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {FormEvent, useState} from "react";
 import { useNavigate, Link } from "react-router-dom";
 
 export default function UserLogin(){
@@ -15,8 +15,20 @@ export default function UserLogin(){
         setFormData({...formData, [name]: value});
     }
 
-    async function handleSubmit() {
-        
+    async function handleSubmit(e: FormEvent) {
+        e.preventDefault();
+        const form = new FormData();
+        form.append("email", formData.email)
+        form.append("password", formData.password)
+        const responce = await fetch("http://localhost:8080/donator/login", {
+            method: "POST",
+            body: JSON.stringify({
+                email: formData.email,
+                password: formData.password
+            })
+        })
+        const data = await responce.json();
+        alert(data);
     }
 
 
