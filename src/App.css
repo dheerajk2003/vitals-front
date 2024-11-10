@@ -1,5 +1,6 @@
 #heroImg{
     filter:brightness(60%);
+    object-fit:cover;
      /* filter: grayscale(.3); */
 }
 

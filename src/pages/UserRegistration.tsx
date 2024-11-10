@@ -1,7 +1,9 @@
 import { FormEvent, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function UserRegistration() {
+
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         name: '',
@@ -47,10 +49,15 @@ export default function UserRegistration() {
             body: form,
             credentials: 'include'        
         });
+        console.log("responce : ", request)
 
         const data = await request.json();
-        if(data){
-            console.log("data : ", data);
+        if(data.token){
+            localStorage.setItem("usertoken", data.token)
+            navigate("/userdashboard");
+        }
+        else{
+            console.log("Unable to Register");
         }
     }
         return (

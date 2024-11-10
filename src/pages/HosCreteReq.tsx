@@ -1,9 +1,13 @@
-import { useState } from "react";
+import { ButtonHTMLAttributes, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function HosCreteReq() {
 
+    const navigate = useNavigate();
+
     const [bloodGroup, setbloodGroup] = useState("");
     const [isEmergency, setIsEmergency] = useState<number>();
+    const [units, setUnits] = useState<number>();
     const [approvals, setApprovals] = useState([
         {
             "name": "Dheeraj",
@@ -31,48 +35,72 @@ export default function HosCreteReq() {
         }
     ]);
 
-    const [testRequest, setTestRequest] = useState([
-        {
-            "name": "Dheeraj",
-            "credits": 30,
-            "donations": 30,
-            "phone" : 9843845763,
-            "date" : ""
-        },
-        {
-            "name": "Kunal",
-            "credits" : 30,
-            "donations": 30,
-            "phone" : 9843845764,
-            "date" : ""
-        },
-        {
-            "name": "Harshit",
-            "credits" : 30,
-            "donations": 30,
-            "phone" : 9843845743,
-            "date" : ""
-        },
-        {
-            "name": "Aryan",
-            "credits" : 30,
-            "donations": 30,
-            "phone" : 9843345763,
-            "date" : ""
+    type request = {
+        AcceptedBy:{
+            Valid: boolean
+            Int64: number
         }
-    ]);
+        BloodGroup: string
+        Type: number
+        Unit: number
+    }
 
-    function setDate(e:React.ChangeEvent<HTMLInputElement>, phone: number){
-        testRequest.forEach((item) => {
-            if(item.phone == phone){
-                item.date = e.target.value;
+    const [testRequest, setTestRequest] = useState<request[]>([]);
+
+    useEffect(() => {
+        if(!localStorage.getItem("hospitaltoken")){
+            navigate("/hospitallogin");
+        }
+        getHospitalsReq();
+    },[]);
+
+    async function getHospitalsReq(){
+        const responce = await fetch("http://localhost:8080/hospital/requests", {
+            method: "GET",
+            headers: {
+                'X-TOKEN': `${localStorage.getItem("hospitaltoken")}`
             }
         })
+        const data = await responce.json();
+        if(data){
+            console.log(data.requests);
+            setTestRequest(data.requests);
+        }
+    }
+
+    // function setDate(e:React.ChangeEvent<HTMLInputElement>, phone: number){
+    //     testRequest.forEach((item) => {
+    //         if(item.phone == phone){
+    //             item.date = e.target.value;
+    //         }
+    //     })
+    // }
+
+    async function sendFunction(e : any){
+        e.preventDefault();
+        const responce = await fetch("http://localhost:8080/hospital/createRequest",{
+            method: "POST",
+            body: JSON.stringify({
+                blood_group: bloodGroup,
+                need_type: isEmergency,
+                unit: units
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+                'X-TOKEN': `${localStorage.getItem("hospitaltoken")}`,
+            }
+        })
+        if(responce.status != 200){
+            alert("Unsuccessfull request");
+        }
+        else{
+            alert("Succesfull request")
+        }
     }
 
     return (
         <div className="w-full pt-10 p-10 bg-gray-100">
-            <div className="w-2/5 shadow p-5 rounded-xl bg-white">
+            <div className=" shadow p-5 rounded-xl bg-white">
                 <h1 className="mb-5 ml-2 font-semibold text-2xl">Create Blood Request</h1>
                 <div className="w-full flex items-center gap-4">
                     <select onChange={(e) => setbloodGroup(e.target.value)} id="bloodGroup" name="bloodGroup" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" required >
@@ -102,12 +130,14 @@ export default function HosCreteReq() {
                         <option value="0">General</option>
                     </select>
 
-                    <button type="submit" className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Create</button>
+                    <input placeholder="Units Required" onChange={(e) => setUnits(parseInt(e.target.value))} type="number" id="unit" name="unit" className=" shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" required />
+
+                    <button type="submit" onClick={sendFunction} className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Create</button>
                 </div>
             </div>
 
             <div className="mt-12 shadow p-5 rounded-xl bg-white">
-                <h1 className="mb-5 ml-2 font-semibold text-2xl">Approval List</h1>
+                <h1 className="mb-5 ml-2 font-semibold text-2xl">Blood Requests</h1>
                 <div>
                     <table className="w-full mt-12">
                         <thead>
@@ -128,40 +158,6 @@ export default function HosCreteReq() {
                                         <td className="p-2">{item.address}</td>
                                         <td className="p-2">{item.phone}</td>
                                         <td className="p-2">{
-                                            <button type="submit" className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-1 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Create</button>   
-                                        }</td>
-                                    </tr>  
-                                )
-                            })}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div className="mt-12 shadow p-5 rounded-xl bg-white">
-                <h1 className="mb-5 ml-2 font-semibold text-2xl">Check Up Requests</h1>
-                <div>
-                    <table className="w-full mt-12">
-                        <thead>
-                            <tr>
-                                <th className="text-left">Name</th>
-                                <th className="text-left">Credits</th>
-                                <th className="text-left">Donations</th>
-                                <th className="text-left">Contact</th>
-                                <th className="text-left">Date</th>
-                                <th className="text-left">Approve</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {testRequest.map((item) => {
-                                return(
-                                    <tr>
-                                        <td className="p-2">{item.name}</td>
-                                        <td className="p-2">{item.credits}</td>
-                                        <td className="p-2">{item.donations}</td>
-                                        <td className="p-2">{item.phone}</td>
-                                        <td className="p-2"><input type="date" onChange={(e) => setDate(e, item.phone)} name="" id="" /></td>
-                                        <td className="p-2">{
                                             <button type="submit" className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-1 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Approve</button>   
                                         }</td>
                                     </tr>  
@@ -172,8 +168,80 @@ export default function HosCreteReq() {
                 </div>
             </div>
 
+            <div className="mt-12 shadow p-5 rounded-xl bg-white">
+                <h1 className="mb-5 ml-2 font-semibold text-2xl">Donation Approval</h1>
+                <div>
+                    <table className="w-full mt-12">
+                        <thead>
+                            <tr>
+                                <th className="text-left">Blood Group</th>
+                                <th className="text-left">Type</th>
+                                <th className="text-left">Quantity</th>
+                                <th className="text-left">Remove</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                (testRequest != null) ? testRequest.map((item) => {
+                                    return(
+                                        <>
+                                        {(item.AcceptedBy.Valid == true) ? " " : 
+                                            <tr>
+                                            <td className="p-2">{item.BloodGroup}</td>
+                                            <td className="p-2">{item.Type > 0 ? 'Emergency' : 'General'}</td>
+                                            <td className="p-2">{item.Unit}</td>
+                                            <td className="p-2">{
+                                                <button type="submit" className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-1 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Remove</button>   
+                                            }</td>
+                                        </tr> 
+                                        }
+                                        
+                                        </> 
+                                    )
+                                }) : " "
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div className="mt-12 shadow p-5 rounded-xl bg-white">
+                <h1 className="mb-5 ml-2 font-semibold text-2xl">Approved Requests</h1>
+                <div>
+                    <table className="w-full mt-12">
+                        <thead>
+                            <tr>
+                                <th className="text-left">Blood Group</th>
+                                <th className="text-left">Type</th>
+                                <th className="text-left">Quantity</th>
+                                <th className="text-left">Remove</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {(testRequest && testRequest != null)?testRequest.map((item) => {
+                                return(
+                                    <>
+                                    {(item.AcceptedBy.Valid == true) ? <tr>
+                                        <td className="p-2">{item.BloodGroup}</td>
+                                        <td className="p-2">{item.Type > 0 ? 'Emergency' : 'General'}</td>
+                                        <td className="p-2">{item.Unit}</td>
+                                        <td className="p-2">{
+                                            <button type="submit" className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-1 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Remove</button>   
+                                        }</td>
+                                    </tr> : " "
+                                    }
+                                    </> 
+                                )
+                            }) : ''}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             {/* <p>{bloodGroup}</p>
             <p>{isEmergency}</p> */}
         </div>
+
+        
     )
 }

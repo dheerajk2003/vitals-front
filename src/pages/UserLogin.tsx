@@ -28,13 +28,20 @@ export default function UserLogin(){
             })
         })
         const data = await responce.json();
-        alert(data);
+        if(data.token){
+            localStorage.setItem("usertoken", data.token);
+            navigate("/userdashboard");
+            console.log(data)
+        }
+        else{
+            alert("Unable to Login");
+        }
     }
 
 
     return (
         <div className="flex justify-center items-center h-screen bg-gray-100">
-            <form className="w-2/6 mx-auto bg-white px-32 py-24 shadow-md rounded-lg" onSubmit={handleSubmit}>
+            <form className="w-2/6 mx-auto bg-white px-20 py-24 shadow-md rounded-lg" onSubmit={handleSubmit}>
                 <h1 className="text-2xl font-bold text-center mb-12">Login</h1>
                 <div className="mb-5">
                     <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-500">Your email</label>

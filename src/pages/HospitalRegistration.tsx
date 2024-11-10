@@ -1,8 +1,10 @@
 
 import { FormEvent, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function HospitalRegistration() {
+
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         name: '',
@@ -10,6 +12,7 @@ export default function HospitalRegistration() {
         password: '',
         address: '',
         phone: '',
+        pincode: ''
     });
 
     const [certificate, setCertificate] = useState<File | null>();
@@ -35,7 +38,8 @@ export default function HospitalRegistration() {
             form.append("password", formData.password)
             form.append("address", formData.address)
             form.append("phoneno", formData.phone)
-            form.append("image", certificate)
+            form.append("pincode", formData.pincode)
+            form.append("cert", certificate)
         }
 
         const responce = await fetch("http://localhost:8080/hospital/register",{
@@ -44,12 +48,18 @@ export default function HospitalRegistration() {
         })
         console.log(responce);
         const data = await responce.json();
-        console.log("Data recieved: ", data)
+        if(data.token){
+            localStorage.setItem("hospitaltoken", data.token);
+            navigate("/hosneedblood");
+        }
+        else{
+            alert("Unable to Register");
+        }
     }
     return (
         <div className="flex justify-center items-center h-screen bg-gray-100">
-            <form className="w-2/6 mx-auto bg-white px-32 py-24 shadow-md rounded-lg" onSubmit={handleSubmit}>
-                <h1 className="text-2xl font-bold text-center mb-12">Hospital Registration</h1>
+            <form className="w-2/6 mx-auto bg-white px-24 py-12 shadow-md rounded-lg" onSubmit={handleSubmit}>
+                <h1 className="text-2xl font-bold text-center mb-8">Hospital Registration</h1>
                 <div className="mb-5">
                     <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-500">Your name</label>
                     <input onChange={(e) => handleChange(e)} type="text" id="name" name="name" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" placeholder="name sirname" required />
@@ -78,7 +88,10 @@ export default function HospitalRegistration() {
                     <input placeholder="NABH" onChange={handleFileCert} type="file" id="certificate" name="certificate" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" required />
                 </div>
 
-                <img src={certificate} alt="" />
+                <div className="mb-5">
+                    <label htmlFor="pincode" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-500">Area Pincode</label>
+                    <input placeholder="PinCode" onChange={(e) => handleChange(e)} type="number" id="pincode" name="pincode" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" required />
+                </div>
 
                 <div className="flex items-start mb-5">
                     <label htmlFor="terms" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Already registered? <Link to="/hospitallogin" className="text-red-600 hover:underline dark:text-red-700">Login Now</Link></label>
