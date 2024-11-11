@@ -1,4 +1,4 @@
-import hero1 from '../assets/hero2.jpeg'
+import hero1 from '../assets/hero5.jpeg'
 export default function Home() {
 
     return (

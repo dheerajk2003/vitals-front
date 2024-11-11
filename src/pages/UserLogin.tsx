@@ -1,4 +1,4 @@
-import {FormEvent, useState} from "react";
+import {FormEvent, useState, useEffect} from "react";
 import { useNavigate, Link } from "react-router-dom";
 
 export default function UserLogin(){
@@ -9,6 +9,12 @@ export default function UserLogin(){
         email: '',
         password: ''
     });
+
+    useEffect(() => {
+        if(localStorage.getItem("usertoken")){
+            navigate("/userdashboard");
+        }
+    },[]);
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         const {name, value} = e.target;
@@ -30,7 +36,7 @@ export default function UserLogin(){
         const data = await responce.json();
         if(data.token){
             localStorage.setItem("usertoken", data.token);
-            navigate("/userdashboard");
+            window.location.reload();
             console.log(data)
         }
         else{

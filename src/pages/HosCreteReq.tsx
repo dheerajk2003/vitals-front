@@ -91,21 +91,21 @@ export default function HosCreteReq() {
                 'X-TOKEN': `${localStorage.getItem("hospitaltoken")}`,
             }
         })
-        if(responce.status != 200){
-            alert("Unsuccessfull request");
+        if(responce.status  == 200){
+            alert("Successful");
+            getHospitalsReq();
         }
         else{
-            alert("Succesfull request")
-            window.location.reload();
-
+            alert("Failed");
         }
     }
 
     async function hosDelReq(e: any, int:number) {
-        const responce = await fetch(`http://localhost/hospital/deleteRequest?id=${int}`,{
+        const responce = await fetch(`http://localhost/hospital/remRequest?id=${int}`,{
             method: "GET",
             headers: {
-                "X-TOKEN": `${localStorage.getItem("hospitaltoken")}`
+                'Content-Type': 'application/json',
+                'X-TOKEN': `${localStorage.getItem("hospitaltoken")}`
             }
         })
         if(responce.status == 200){
@@ -123,6 +123,7 @@ export default function HosCreteReq() {
                 <h1 className="mb-5 ml-2 font-semibold text-2xl">Create Blood Request</h1>
                 <div className="w-full flex items-center gap-4">
                     <select onChange={(e) => setbloodGroup(e.target.value)} id="bloodGroup" name="bloodGroup" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" required >
+                        <option value="" defaultChecked disabled>Blood Group</option>
                         <option value="O+">O+</option>
                         <option value="O-">O-</option>
                         <option value="A+">A+</option>
@@ -139,14 +140,14 @@ export default function HosCreteReq() {
                         <option value="A1B-">A1B-</option>
                         <option value="A2B+">A2B+</option>
                         <option value="A2B-">A2B-</option>
-                        <option value="Bombay Blood Group">Bombay Blood Group</option>
                         <option value="INRA">INRA</option>
-                        <option value="I Dont Know">I Dont Know</option>
+                        <option value="IDK">I Don't know</option>
                     </select>
 
                     <select onChange={(e) => setIsEmergency(parseInt(e.target.value))} id="bloodGroup" name="bloodGroup" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" required >
-                        <option value="1">Emergency</option>
+                        <option value="" defaultChecked disabled>Type</option>
                         <option value="0">General</option>
+                        <option value="1">Emergency</option>
                     </select>
 
                     <input placeholder="Units Required" onChange={(e) => setUnits(parseInt(e.target.value))} type="number" id="unit" name="unit" className=" shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" required />
@@ -188,15 +189,14 @@ export default function HosCreteReq() {
             </div> */}
 
             <div className="mt-12 shadow p-5 rounded-xl bg-white">
-                <h1 className="mb-5 ml-2 font-semibold text-2xl">Donation Approval</h1>
+                <h1 className="mb-5 ml-2 font-semibold text-2xl">Pending</h1>
                 <div>
                     <table className="w-full mt-12">
                         <thead>
                             <tr>
                                 <th className="text-left">Blood Group</th>
                                 <th className="text-left">Type</th>
-                                <th className="text-left">Quantity</th>
-                                <th className="text-left">Remove</th>
+                                <th className="text-left">Units</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -209,9 +209,13 @@ export default function HosCreteReq() {
                                             <td className="p-2">{item.BloodGroup}</td>
                                             <td className="p-2">{item.Type > 0 ? 'Emergency' : 'General'}</td>
                                             <td className="p-2">{item.Unit}</td>
-                                            <td className="p-2">{
-                                                <button type="submit" onClick={(e) => hosDelReq(e,item.Id)} className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-1 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Remove</button>   
-                                            }</td>
+                                            <td>
+                                                <button type="submit" 
+                                                    onClick={(e) => hosDelReq(e,item.Id)} 
+                                                    className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-1 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+                                                    Remove
+                                                </button>
+                                            </td>
                                         </tr> 
                                         }
                                         
@@ -232,7 +236,7 @@ export default function HosCreteReq() {
                             <tr>
                                 <th className="text-left">Blood Group</th>
                                 <th className="text-left">Type</th>
-                                <th className="text-left">Quantity</th>
+                                <th className="text-left">Units</th>
                             </tr>
                         </thead>
                         <tbody>

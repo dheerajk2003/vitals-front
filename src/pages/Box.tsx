@@ -6,6 +6,7 @@ import HospitalRegistration from "./HospitalRegistration";
 import HospitalLogin from "./HospitalLogin";
 import HosCreteReq from "./HosCreteReq";
 import UserDashboard from "./UserDashboard";
+import logo from '../assets/logo.png'
 
 export default function Box() {
 
@@ -29,13 +30,39 @@ export default function Box() {
 
 function Layout() {
 
+    function clearLocal(e: any){
+        e.preventDefault();
+        localStorage.clear();
+        window.location.reload();
+    }
+
     return <div id="nav" className="flex flex-col min-h-screen ">
-        <div className="w-full h-16 bg-white flex items-center justify-center gap-8 font-medium border-b-gray-500 ">
-            <Link to="/" className="navLinks hover:text-red-400">Home</Link>
-           {localStorage.getItem("hospitaltoken") ?  <Link to="/hosneedblood"  className="navLinks hover:text-red-400">Activities</Link> : " "}
+        <div className="w-full h-16 bg-white flex items-center justify-start gap-8 font-medium border-b-gray-500 pl-10">
+            <Link to="/" className="navLinks hover:text-red-400 text-red-500 text-2xl font-bold">
+                <img src={logo} alt="Vital Credits" className="h-12" />
+            </Link>
+
+            {
+                (localStorage.getItem("hospitaltoken") !=null)
+                ? 
+                <Link to="/hosneedblood"  className="navLinks hover:text-red-400">Donations</Link>
+                :
+                " "
+            }
             
-            {localStorage.getItem("usertoken") ? <Link to="/userdashboard" className="navLinks hover:text-red-400" >Dashboard</Link> : ""}
-            <Link to="/userlogin" className="navLinks text-white bg-red-700 hover:bg-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center absolute right-10 top-3">Login</Link>
+            {
+                (localStorage.getItem("usertoken") !=null)
+                ?
+                <Link to="/userdashboard" className="navLinks hover:text-red-400" >Dashboard</Link>
+                :
+                " "
+            }
+
+            {(localStorage.getItem("usertoken") != null || localStorage.getItem("hospitaltoken") !=null 
+            ? 
+            <button onClick={clearLocal} className="navLinks text-white bg-red-700 hover:bg-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center absolute right-10 top-3">Logout</button>
+            : 
+            <Link to="/userlogin" className="navLinks text-white bg-red-700 hover:bg-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center absolute right-10 top-3">Login</Link>)}
         </div>
         <main className="flex-1 h-full">
             <Outlet />

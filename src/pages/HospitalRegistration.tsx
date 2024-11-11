@@ -1,5 +1,5 @@
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function HospitalRegistration() {
@@ -16,6 +16,12 @@ export default function HospitalRegistration() {
     });
 
     const [certificate, setCertificate] = useState<File | null>();
+
+    useEffect(() => {
+        if(localStorage.getItem("hospitaltoken")){
+            navigate("/hosneedblood");
+        }
+    },[]);
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         const { name, value } = e.target;
@@ -50,7 +56,8 @@ export default function HospitalRegistration() {
         const data = await responce.json();
         if(data.token){
             localStorage.setItem("hospitaltoken", data.token);
-            navigate("/hosneedblood");
+            window.location.reload();
+            // navigate("/hosneedblood");
         }
         else{
             alert("Unable to Register");

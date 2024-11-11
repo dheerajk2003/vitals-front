@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function UserRegistration() {
@@ -16,6 +16,12 @@ export default function UserRegistration() {
     const [bloodGroup, setbloodGroup] = useState("");
 
     const [voter, setVoter] = useState<File | null>();
+
+    useEffect(() => {
+        if(localStorage.getItem("usertoken")){
+            navigate("/userdashboard");
+        }
+    },[]);
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         const { name, value } = e.target;
@@ -53,8 +59,8 @@ export default function UserRegistration() {
 
         const data = await request.json();
         if(data.token){
-            localStorage.setItem("usertoken", data.token)
-            navigate("/userdashboard");
+            localStorage.setItem("usertoken", data.token);
+            window.location.reload();
         }
         else{
             console.log("Unable to Register");

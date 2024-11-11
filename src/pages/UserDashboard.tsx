@@ -7,7 +7,6 @@ export default function UserDashboard(){
     const navigate = useNavigate();
 
     const [credits, setCredits] = useState<number>(12);
-    const [donations, setDonations] = useState<number>(5);
 
     type request = {
         AcceptedBy:{
@@ -21,15 +20,30 @@ export default function UserDashboard(){
     }
 
     const [requests, setRequests] = useState<request[]>([]);
+    // const [accReq, setAccReq] = useState<request[]>([]);
 
     useEffect(() => {
         if(!localStorage.getItem("usertoken")){
             navigate("/userlogin");
         }
+        getcredits();
         getRequests();
+        // getAcceptedRequests();
     },[])
 
-    
+    async function getcredits(){
+        const responce = await fetch("http://localhost:8080/donator/getCredits",{
+            method: "GET",
+            headers: {
+                "X-TOKEN": `${localStorage.getItem("usertoken")}`
+            }
+        })
+        console.log(responce);
+        const data = await responce.json();
+        if(data){
+            setCredits(data.credits);
+        }
+    }
 
     async function getRequests(){
         const responce = await fetch("http://localhost:8080/donator/requests", {
@@ -43,6 +57,17 @@ export default function UserDashboard(){
         console.log(data);
     }
 
+    // async function getAcceptedRequests(){
+    //     const responce = await fetch("http://localhost:8080/donator/accepted_requests", {
+    //         method: "GET",
+    //         headers: {
+    //             "X-TOKEN": `${localStorage.getItem("usertoken")}`
+    //         }
+    //     })
+    //     const data = await responce.json();
+    //     setAccReq(data.requests);
+    // }
+
     async function Accept(e:any, id: number){
         // e.preventDefault();
         const responce = await fetch(`http://localhost:8080/donator/acceptRequest?id=${id}`,{
@@ -52,8 +77,8 @@ export default function UserDashboard(){
             }
         })
         if(responce.status == 200){
-            alert("Accepted")
-            window.location.reload();
+            getRequests();
+            getcredits();
         }
         else{
             alert("Failed")
@@ -63,8 +88,7 @@ export default function UserDashboard(){
     return(
         <div className=" min-h-screen bg-gray-100 p-8">
             <div className="flex items-center justify-start gap-5 rounded-3xl shadow bg-white">
-                <h1 className="m-5 font-semibold text-2xl">Credits : {credits}</h1>            
-                <h1 className="m-5 font-semibold text-2xl">Donations : {donations}</h1>
+                <h1 className="m-5 font-semibold text-2xl">Credits : {credits}</h1>
             </div>
 
             <div className="mt-12 shadow p-5 rounded-xl bg-white">

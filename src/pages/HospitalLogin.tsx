@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Link,useNavigate } from "react-router-dom";
 
 export default function HospitalLogin(){
@@ -8,6 +8,12 @@ export default function HospitalLogin(){
         email: '',
         password: ''
     });
+
+    useEffect(() => {
+        if(localStorage.getItem("hospitaltoken")){
+            navigate("/hosneedblood");
+        }
+    },[]);
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         const {name, value} = e.target;
@@ -25,8 +31,10 @@ export default function HospitalLogin(){
         })
         const data = await responce.json();
         if(data.token){
-            localStorage.setItem("hospitaltoken", data.token)
-            navigate("/hosneedblood");
+            localStorage.setItem("hospitaltoken", data.token);
+            window.location.reload();
+            
+            // navigate("/hosneedblood");
         }
         else{
             alert("Unable to login");
