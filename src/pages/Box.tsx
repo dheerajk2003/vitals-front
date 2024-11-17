@@ -36,8 +36,8 @@ function Layout() {
         window.location.reload();
     }
 
-    return <div id="nav" className="flex flex-col min-h-screen ">
-        <div className="w-full h-16 bg-white flex items-center justify-start gap-8 font-medium border-b-gray-500 pl-10">
+    return <div id="nav" className="flex flex-col min-h-screen">
+        <div className="w-full z-10 h-16 absolute bg-white flex items-center justify-start gap-8 font-medium border-b-gray-500 pl-10">
             <Link to="/" className="navLinks hover:text-red-400 text-red-500 text-2xl font-bold">
                 <img src={logo} alt="Vital Credits" className="h-12" />
             </Link>

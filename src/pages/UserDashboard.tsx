@@ -86,7 +86,7 @@ export default function UserDashboard(){
     }
 
     return(
-        <div className=" min-h-screen bg-gray-100 p-8">
+        <div className=" min-h-screen bg-gray-100 p-8 pt-24">
             <div className="flex items-center justify-start gap-5 rounded-3xl shadow bg-white">
                 <h1 className="m-5 font-semibold text-2xl">Credits : {credits}</h1>
             </div>
