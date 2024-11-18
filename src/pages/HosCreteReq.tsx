@@ -56,7 +56,7 @@ export default function HosCreteReq() {
     },[]);
 
     async function getHospitalsReq(){
-        const responce = await fetch("http://localhost:8080/hospital/requests", {
+        const responce = await fetch("/hospital/requests", {
             method: "GET",
             headers: {
                 'X-TOKEN': `${localStorage.getItem("hospitaltoken")}`
@@ -79,7 +79,7 @@ export default function HosCreteReq() {
 
     async function sendFunction(e : React.MouseEvent<HTMLButtonElement, MouseEvent>){
         e.preventDefault();
-        const responce = await fetch("http://localhost:8080/hospital/createRequest",{
+        const responce = await fetch("/hospital/createRequest",{
             method: "POST",
             body: JSON.stringify({
                 blood_group: bloodGroup,
@@ -101,7 +101,7 @@ export default function HosCreteReq() {
     }
 
     async function hosDelReq(int:number) {
-        const responce = await fetch(`http://localhost/hospital/remRequest?id=${int}`,{
+        const responce = await fetch(`/hospital/remRequest?id=${int}`,{
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',

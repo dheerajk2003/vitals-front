@@ -22,7 +22,7 @@ export default function HospitalLogin(){
 
     async function handleSubmit(e : FormEvent) {
         e.preventDefault();
-        const responce = await fetch("http://localhost:8080/hospital/login", {
+        const responce = await fetch("/hospital/login", {
             method: "POST",
             body: JSON.stringify({
                 email: formData.email,

@@ -48,7 +48,7 @@ export default function HospitalRegistration() {
             form.append("cert", certificate)
         }
 
-        const responce = await fetch("http://localhost:8080/hospital/register",{
+        const responce = await fetch("/hospital/register",{
             method: "POST",
             body: form
         })

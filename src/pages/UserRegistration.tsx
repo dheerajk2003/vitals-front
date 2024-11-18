@@ -50,7 +50,7 @@ export default function UserRegistration() {
             form.append("image", voter)
         }
 
-        const request = await fetch("http://127.0.0.1:8080/donator/register",{
+        const request = await fetch("/donator/register",{
             method: "POST",
             body: form,
             credentials: 'include'        

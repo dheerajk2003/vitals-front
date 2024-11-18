@@ -32,7 +32,7 @@ export default function UserDashboard(){
     },[])
 
     async function getcredits(){
-        const responce = await fetch("http://localhost:8080/donator/getCredits",{
+        const responce = await fetch("/donator/getCredits",{
             method: "GET",
             headers: {
                 "X-TOKEN": `${localStorage.getItem("usertoken")}`
@@ -46,7 +46,7 @@ export default function UserDashboard(){
     }
 
     async function getRequests(){
-        const responce = await fetch("http://localhost:8080/donator/requests", {
+        const responce = await fetch("/donator/requests", {
             method: "GET",
             headers: {
                 "X-TOKEN": `${localStorage.getItem("usertoken")}`
@@ -70,7 +70,7 @@ export default function UserDashboard(){
 
     async function Accept(id: number){
         // e.preventDefault();
-        const responce = await fetch(`http://localhost:8080/donator/acceptRequest?id=${id}`,{
+        const responce = await fetch(`/donator/acceptRequest?id=${id}`,{
             method: "GET",
             headers:{
                 "X-TOKEN": `${localStorage.getItem("usertoken")}`
