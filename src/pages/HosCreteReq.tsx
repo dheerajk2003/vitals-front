@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function HosCreteReq() {
@@ -8,32 +8,32 @@ export default function HosCreteReq() {
     const [bloodGroup, setbloodGroup] = useState("");
     const [isEmergency, setIsEmergency] = useState<number>();
     const [units, setUnits] = useState<number>();
-    const [approvals, setApprovals] = useState([
-        {
-            "name": "Dheeraj",
-            "bloodG": "O+",
-            "address": "shree ram vihar",
-            "phone" : 9843845763
-        },
-        {
-            "name": "Kunal",
-            "bloodG": "A+",
-            "address": "Rampura phatak",
-            "phone" : 9843845763
-        },
-        {
-            "name": "Harshit",
-            "bloodG": "B+",
-            "address": "Mahesh Nagar",
-            "phone" : 9843845763
-        },
-        {
-            "name": "Aryan",
-            "bloodG": "O-",
-            "address": "Vaishali",
-            "phone" : 9843845763
-        }
-    ]);
+    // const [approvals, setApprovals] = useState([
+    //     {
+    //         "name": "Dheeraj",
+    //         "bloodG": "O+",
+    //         "address": "shree ram vihar",
+    //         "phone" : 9843845763
+    //     },
+    //     {
+    //         "name": "Kunal",
+    //         "bloodG": "A+",
+    //         "address": "Rampura phatak",
+    //         "phone" : 9843845763
+    //     },
+    //     {
+    //         "name": "Harshit",
+    //         "bloodG": "B+",
+    //         "address": "Mahesh Nagar",
+    //         "phone" : 9843845763
+    //     },
+    //     {
+    //         "name": "Aryan",
+    //         "bloodG": "O-",
+    //         "address": "Vaishali",
+    //         "phone" : 9843845763
+    //     }
+    // ]);
 
     type request = {
         AcceptedBy:{
@@ -77,7 +77,7 @@ export default function HosCreteReq() {
     //     })
     // }
 
-    async function sendFunction(e : any){
+    async function sendFunction(e : React.MouseEvent<HTMLButtonElement, MouseEvent>){
         e.preventDefault();
         const responce = await fetch("http://localhost:8080/hospital/createRequest",{
             method: "POST",
@@ -100,7 +100,7 @@ export default function HosCreteReq() {
         }
     }
 
-    async function hosDelReq(e: any, int:number) {
+    async function hosDelReq(int:number) {
         const responce = await fetch(`http://localhost/hospital/remRequest?id=${int}`,{
             method: "GET",
             headers: {
@@ -211,7 +211,7 @@ export default function HosCreteReq() {
                                             <td className="p-2">{item.Unit}</td>
                                             <td>
                                                 <button type="submit" 
-                                                    onClick={(e) => hosDelReq(e,item.Id)} 
+                                                    onClick={() => hosDelReq(item.Id)} 
                                                     className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-1 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
                                                     Remove
                                                 </button>

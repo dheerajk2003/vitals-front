@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import hero1 from '../assets/HandUP.png'
 import hero2 from '../assets/HandDown.png'
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 export default function Home() {
 
-    const [mySvg , setMySvg] =  useState("");
+ //   const [mySvg , setMySvg] =  useState("");
 
     useEffect(() => {
         // getImg();
@@ -33,10 +33,10 @@ export default function Home() {
         })
     })
 
-    async function getImg(){
-        const responce = await fetch(hero1);
-        setMySvg(await responce.text());
-    }
+    // async function getImg(){
+    //     const responce = await fetch(hero1);
+    //     setMySvg(await responce.text());
+    // }
 
     return (
         <div className='w-screen h-screen flex flex-col items-end justify-center overflow-hidden bg-red-50'>

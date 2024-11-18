@@ -68,7 +68,7 @@ export default function UserDashboard(){
     //     setAccReq(data.requests);
     // }
 
-    async function Accept(e:any, id: number){
+    async function Accept(id: number){
         // e.preventDefault();
         const responce = await fetch(`http://localhost:8080/donator/acceptRequest?id=${id}`,{
             method: "GET",
@@ -110,7 +110,7 @@ export default function UserDashboard(){
                                         <td className="p-2">{item.Unit}</td>
                                         <td className="p-2">{(item.Type > 0) ? "Emergency" : "General"}</td>
                                         <td className="p-2">{
-                                            <button type="submit" onClick={(e) => Accept(e,item.Id)} className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-1 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Accept</button>   
+                                            <button type="submit" onClick={() => Accept(item.Id)} className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-1 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Accept</button>   
                                         }</td>
                                     </tr>  
                                 )
